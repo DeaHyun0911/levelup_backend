@@ -41,7 +41,6 @@
 
 ![Architecture](./assets/플로우차트.drawio.png)
 
-상품: 특정 게임의 실력을 향상시키기 위해 제공되는 1:1 또는 그룹 단위의 교육 서비스
 
 ## 📝 **와이어프레임**
 
@@ -54,7 +53,6 @@
 
 ## 🏆 **Architecture**
 
-#### [프로젝트 아키텍처]
 
 ![Architecture](./assets/아키텍처.png)
 
