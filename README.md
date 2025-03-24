@@ -53,7 +53,6 @@
 
 ## 🏆 **Architecture**
 
-#### [프로젝트 아키텍처]
 
 ![Architecture](./assets/아키텍처.png)
 
