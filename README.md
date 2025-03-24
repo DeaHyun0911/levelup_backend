@@ -1,11 +1,11 @@
-## 🎮 Level_UP - 원하는 멘토를 선택하고 실력을 키우는 게임 코칭 플랫폼! 🚀
+## 🎮 Level_UP - 원하는 멘토를 선택하고 실력을 키우는 게임 코칭 플랫폼
 
 <img width="500px" src="assets/levelup-logo.png">
 <br>
 
 ## 🚀 프로젝트 소개
 
-### **🎮게임 장인들과 함께하는 실시간 피드백 & 재능 거래 플랫폼!**
+### **게임 장인들과 함께하는 실시간 피드백 & 재능 거래 플랫폼!**
 
 게임을 더 잘하고 싶나요? 이제 게임 커뮤니티에서 각 장르의 장인들과 직접 소통하며 실시간 피드백을 받을 수 있습니다!
 
@@ -26,11 +26,11 @@
 ## 👤 팀원 소개
 
 
-|                                                                     김효중                                                                     |                                                                      최대현                                                                       |                                                                                             이경훈                                                                                             |                                                                                   이동건                                                                                   |                                                                   정영균                                                                   |
-| :---------------------------------------------------------------------------------------------------------------------------------------------: |:----------------------------------------------------------------------------------------------------------------------------------------------:| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------: |
-| <a href="https://github.com/rlagywnd4" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/71661011?s=60&v=4"/></a> | <a href="https://github.com/DeaHyun0911" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/107090954?v=4" /></a> |                          <a href="https://github.com/kyung412820" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/71320521?v=4"/> </a>                          |               <a href="https://github.com/LeeDong-gun" target="_blank"> <img width="100px" src="https://avatars.githubusercontent.com/u/186677939?v=4"/></a>               | <a href="https://github.com/lq0920084" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/136417479?v=4"/></a> |
-|                                                   [@rlagywnd4](https://github.com/rlagywnd4)                                                   |                                                 [@DeaHyun0911](https://github.com/DeaHyun0911)                                                 |                                                                                   [@kyung412820](https://듯)                                                                                   |                                                               [@LeeDong-gun](https://github.com/LeeDong-gun)                                                               |                                                 [@lq0920084](https://github.com/lq0920084)                                                 |
-|                                                           프로젝트 총괄<br/> 커뮤니티                                                           |                                                                     채팅, 배포                                                                     | ElasticSearch를 이용한 인기 검색어 조회 기능<br />자동완성 <br />감성분석과 집계를 통한 Top3 선정 <br /> 클러스터를 이용한 분산 데이터 처리 <br /> 카테고리별 상품 개수 검색, ELK 기반 Log 관리 | Order, Bill, Payments 테이블 관리<br /> 결제흐름 구현 <br /> 재고관리(Redis 분산락, 비관적락) <br /> 중복결제 생성 개선(Redis Listener TTL발생) <br /> 결제승인 재시도 기능 |                                                               스프링 시큐리티                                                               |
+|                                                                       김효중                                                                       |                                                                        최대현                                                                        |                                                                      이경훈                                                                      |                                                                      이동건                                                                       |                                                                     정영균                                                                     |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|
+| <a href="https://github.com/rlagywnd4" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/71661011?s=60&v=4"/></a> |  <a href="https://github.com/DeaHyun0911" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/107090954?v=4" /></a>   | <a href="https://github.com/kyung412820" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/71320521?v=4"/> </a> | <a href="https://github.com/LeeDong-gun" target="_blank"> <img width="100px" src="https://avatars.githubusercontent.com/u/186677939?v=4"/></a> | <a href="https://github.com/lq0920084" target="_blank"><img width="100px" src="https://avatars.githubusercontent.com/u/136417479?v=4"/></a> |
+|                                                   [@rlagywnd4](https://github.com/rlagywnd4)                                                    |                                                  [@DeaHyun0911](https://github.com/DeaHyun0911)                                                   |                                                           [@kyung412820](https://듯)                                                           |                                                 [@LeeDong-gun](https://github.com/LeeDong-gun)                                                 |                                                 [@lq0920084](https://github.com/lq0920084)                                                  |
+|                                                                   커뮤니티<br/>댓글                                                                   |                                                                    리뷰<br/>채팅<br/>배포                                                                    |                                                                      상품                                                                       |                                                                   주문<br/>결제                                                                    |                                                                     회원                                                                      |
 
 <br>
 
@@ -54,13 +54,10 @@
 
 ## 🏆 **Architecture**
 
-#### [모놀로틱 프로젝트 아키텍처]
+#### [프로젝트 아키텍처]
 
 ![Architecture](./assets/아키텍처.png)
 
-#### [MSA 구상 아키텍처]
-
-![Architecture](./assets/아키텍처MSA.png)
 
 <br>
 
