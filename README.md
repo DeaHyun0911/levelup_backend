@@ -113,18 +113,10 @@
 - **모니터링 시각화**: Kibana를 활용한 시스템 로그, 데이터 관리 시각화
 - **ElasticSearch 검색 성능 모니터링**: 검색 응답 시간 및 인덱스 크기 모니터링
 
-#### 모니터링 시스템 구성
 
-- **Elastic Stack(ELK)**: Elasticsearch + Logstash + Kibana를 이용한 로그 분석
-- **Fleet Server**: 서버 및 애플리케이션 성능 시각화
-
-
-
-
-# 🔧 **성능 개선**
-
+# 🔧 **트러블 슈팅**
 <details>
- <summary>1. 엘라스틱 서치 사용 이유와 검색 속도 개선</summary>
+<summary>[이경훈] 엘라스틱 서치 사용 이유와 검색 속도 개선</summary>
 
 - Mysql로 기존의 30만 이상의 데이터에서 특정 단어가 포함된 데이터를 조회시 속도가 조금 느리다는 판단을 함(4.932초)
 - 속도의 개선을 위해서 캐시를 적용하거나 페이징을 통해 카테고리화를 수행하여 속도를 올려봄
@@ -156,8 +148,9 @@
 <br>
 <br>
 </details>
-
-## 2. **Redis TTL** : 주문 후 10 분 결제 누락 시 악성재고관리 방지
+<br>
+<details>
+<summary>[이동건] 주문 후 10 분 결제 누락 시 악성재고관리 방지</summary>
 
 ![img.png](assets/Pendding_img.png)
 위 상황은 주문을 만들었지만 결제를 진행하지않고 PENDDING 상태로 유지중.
@@ -190,8 +183,10 @@ TTL이 만료되면 삭제 이벤트를 감지하여 로그 기록.
   생성 되었던 Order는 HardDelete가 이루어집니다.
 
 <br>
-
-## 3.커뮤니티 검색 속도 개선
+</details>
+<br>
+<details>
+<summary>[김효중] 커뮤니티 검색 속도 개선</summary>
 
 ### 1. 초기 상태 (MySQL + JPA)
 
@@ -262,10 +257,90 @@ TTL이 만료되면 삭제 이벤트를 감지하여 로그 기록.
 <br>
 
 <br>
+</details>
 
-# 🔒 **트러블슈팅**
+<br>
 
-## 1. **엘라스틱 서치의 형태소 분석**
+<details>
+<summary>[최대현] 쓰레드풀 튜닝 / Redis 캐시 전략을 활용한 메시지 응답 속도 개선</summary>
+
+### 초기 설계
+초기에는 메시지를 발송하면 즉시 DB에 저장되는 방식으로 설계했었습니다. 그리고 현재 채팅 서비스를 얼마나 많은 사람이 이용할 수 있을 까 궁금했고, 단일서버기준으로 1000명정도의 사용자가 동시접속하여 안정적으로 이용하는 것을 목표로 잡고 테스트를 진행하였습니다.
+
+### 문제점
+1000명의 유저가 동시에 사용할 수 있을까?
+<br>
+Jmeter를 이용해 웹소켓연결 → CONNECTED → SUBSCRIBE → SEND → MESSAGE → DISCONNECTED 과정으로 시나리오를 설계하고 SEND 이후 MESSAGE 까지의 응답시간이 얼마나 나오는지를 중점으로 보았습니다. 그리고 100명부터 100씩늘려가며 1000명의 유저가 동시에 접근하는 상황을 테스트해보았습니다. (요청은 10번씩 진행)
+
+| **쓰레드** | **평균 응답 시간** | **에러율**   |
+|---------|--------------|-----------|
+| `100`   | 35ms         | **0.00%** |
+| `500`   | 645ms        | **0.14%** |
+| `1000`  | 1996ms       | **5.31%** |
+테스트 결과, 500부터 평균 응답 시간이 느려지고 에러율이 발생하였으며 목표수치인 1000에서는 응답 시간은 약 2초, 메시지가 5.31% 에러로 유실되는 문제가 발생하였습니다. 그리고 서버를 확인해보았습니다.
+
+![img.png](src/main/resources/static/img/img.png)
+![img_1.png](src/main/resources/static/img/img_1.png)
+동시에 접근하는 과정에서 뒤로 밀린 요청은 10초가 지나 웹소켓에서 타임아웃이 발생하였고, Redis Pub/Sub을 이용하여 발행하던 메시지 또한 RedisTimeoutException이 발생하면서 메시지가 유실되고 있었습니다.
+
+![img_2.png](src/main/resources/static/img/img_2.png)
+이때 그라파나의 대시보드를 확인해보니 Thread States 에서 테스트 시간동안 blocked이 많은 것을 확인할 수 있었습니다. 그래서 웹소켓과 Redis를 사용할때 스프링에서 제공하는 ThreadPoolTaskExecutor 를 활용하여 쓰레프풀을 조금씩 변경해가며 튜닝하였습니다.
+
+#### 웹소켓/Redis 쓰레드풀 튜닝 테스트 결과
+| **구분**              | **평균 응답 시간** | **에러율**   |
+|---------------------|--------------|-----------|
+| `Websocket`         | 291ms        | **0.03%** |
+| `Websocket + Redis` | 299ms        | **0.00%** |
+웹소켓 메시지 처리 채널에만 적용해도 응답속도가 훨씬 빨라졌으며 에러율 또한 크게 줄었는데 하지만
+RedisTimeoutException이 미세하게 발생하고 있었습니다. RedisMessageListener 도 같이 쓰레드풀을 튜닝하였을때 속도는 비슷했지만 에러율은 0%로 메시지 유실이 되지 않았습니다.
+
+![img_3.png](src/main/resources/static/img/img_3.png)
+쓰레드 blocked 또한 초기에 순간적으로 발생하는 모습은 보였지만 이전처럼 테스트 시간 내내 유지되는 모습은 크게 감소한 것을 확인할 수 있었습니다.
+
+### 5분 TPS 측정
+위에선 단순히 1000개 쓰레드가 10번씩 요청하도록 테스트를 진행하였는데, 1000명이 이용할 때 초당 몇 개의 메시지를 처리할 수 있을 지 확인하기 어려워 같은 환경에서 5분동안 얼마나 처리할 수 있을 지 측정해보았습니다.
+
+| **발행된 메시지수** | **평균 응답 속도** | **처리량(Throughput)** |
+|--------------|--------------|---------------------|
+| `182908`     | 552ms        | **610TPS**          |
+테스트 결과, 응답 지연 시간이 낮아야 하는 채팅 서비스 기준으로는 느린 속도와 낮은 처리량이 확인되었습니다.
+
+### 캐시 Write-Back 전략 도입
+메시지를 발행할 때마다 저장하여 DB에 너무 많은 부하가 발생한다고 판단되었습니다. 이러한 문제를 해결하기 위해 메시지 발행시 Redis 캐시에 먼저 저장하고 일정 주기로 DB에 업데이트하는 방식으로 변경해보기로 하였습니다.
+
+| **발행된 메시지수** | **평균 응답 속도** | **처리량(Throughput)** |
+|--------------|--------------|---------------------|
+| `390004`     | 275ms        | **1293TPS**         |
+
+### 결론
+| **구분**     | **평균 응답 시간** | **에러율**   | 처리량     |
+|------------|--------------|-----------|---------|
+| `개선 전`     | 1996ms       | **5.31%** | 168TPS  |
+| `쓰레드풀 튜닝`  | 552ms        | **0.00%** | 610TPS  |
+| `Redis 캐시` | 275ms        |    **0.00%**       | 1293TPS |
+- 평균 응답 속도
+  - 기존 약 2초(1996ms) → 쓰레드풀 튜닝 후 0.55초(552ms) → 캐시 Write-Back 전략 도입 후 0.27초(275ms)
+  - 약 7배 빠른 응답 속도를 달성
+
+
+- 에러율
+  - 기존 5.31% → 개선 후 0.00%
+  - 에러 발생 완전 해소
+
+
+- 처리량(TPS)
+  - 기존 168 TPS → 쓰레드풀 튜닝 후 610 TPS → 캐시 Write-Back 전략 도입 후 1293 TPS
+  - 약 7.7배 성능 향상
+
+결과적으로 쓰레드풀 튜닝과 캐시 Write-Back 전략을 통해 응답 속도 단축, 에러율 제거, 처리량 증가라는 세 가지 핵심 개선 효과를 얻을 수 있었습니다.
+
+</details>
+
+<br>
+
+<details>
+
+<summary>[이경훈] 엘라스틱 서치의 형태소 분석</summary>
 
 ### 문제 상황
 
@@ -317,8 +392,11 @@ TTL이 만료되면 삭제 이벤트를 감지하여 로그 기록.
 - 실상 N-gram, Edge-N-gram 정도가 선택지였고, 자동 완성을 위해 Edge-N-gram을, 부분 검색을 위해 의미를 기준으로 나눌 수 있는 Nori를 사용하기로 결정했다.
 
 <br>
+</details>
 
-## 2. CustomOAuth2UserService에서 발생한 Exception이 상위로 던져지지 않는 문제
+<br>
+<details>
+<summary>[정영균] CustomOAuth2UserService에서 발생한 Exception이 상위로 던져지지 않는 문제</summary>
 
 - CustomOAuth2UserService에서 발생한 로그인 실패 관련 커스텀 Exception들이 상위로 넘어가지 못해서 postman과 웹페이지로 표시가 되지 않는 문제가 발생하였다.
   ![Image](https://github.com/user-attachments/assets/27838a73-ede1-4c6c-924e-5b96bfe5319a)
@@ -329,8 +407,11 @@ TTL이 만료되면 삭제 이벤트를 감지하여 로그 기록.
 - ![img.png](assets/ExceptionResult.png)
 
 <br>
+</details>
+<br>
+<details>
 
-## 3. PageableExecutionUtils를 활용한  count쿼리 최적화
+<summary>[이동건] PageableExecutionUtils를 활용한  count쿼리 최적화</summary>
 
 ### 문제 상황
 
@@ -399,8 +480,11 @@ return PageableExecutionUtils.getPage(results, pageable, totalCount::fetchOne);
 `PageableExcutionUtils.getPage()` 를 활용하여 count쿼리 실생을 줄이면 성능을 최적화할 수 있다. 특히, 전체개수를 정확히 알 필요가 없는 경우에는 count 쿼리를 지연 실행하거나 생략하는 것이 성능 개선에 큰 도움이 된다.
 
 <br>
+</details>
+<br>
+<details>
 
-## 4. RabbitMQ 메세지 변환 오류 트러블슈팅
+<summary>[이동건] RabbitMQ 메세지 변환 오류 트러블슈팅</summary>
 
 ### 문제 상황
 
@@ -486,131 +570,5 @@ public void publishBillStatusChange(BillEntity bill) {
 메세지를 더 구조적으로 관리할 수 있고, 데이터 변환 과정에서 발생하는 오류를 줄일 수 있음.
 
 <br>
+</details>
 
-## 5. 오류, 성공 메시지 통합 컨벤션 적용 도중 필터 오류메시지 컨벤션 적용 불가 문제 트러블 슈팅
-
-### 문제 상황
-
-- 필터영역에서 발생한 오류메시지는 `GlobalExceptionHandler`가 오류를 캐치하는 `DispatcherServlet`을 통과하기 전 단계이기 때문에 `GlobalExceptionHandler`에서 이 오류를 처리해줄 수 없음.
-
-### 스프링 MVC 필터에서 메시지 컨벤션 해결 방법
-
-1. 기존 오류 메시지, 성공 메시지 컨벤션과 완전하게 동일한 형태의 오류 메시지와 성공 메시지를 String값으로 선언한 필터리스폰 클래스 생성.
-2. 발생한 오류 메시지와 성공 메시지를 해당 클래스를 통해 직접 `HttpServletResponse`의 `getWriter`메소드의 `write`로 메시지를 `HttpServletResponse`에 작성.
-3. 해당 `HttpServletResponse` 객체를 리턴하는 것으로 동일한 컨벤션을 지키는 오류 메시지, 성공 메시지를 그대로 출력 가능.
-
-### 스프링 클라우드 API 게이트웨이에서 메시지 컨벤션 해결 방법
-
-1. 기존 오류 메시지, 성공 메시지 컨벤션과 완전하게 동일한 형태의 오류 메시지와 성공 메시지를 Map 형태로 선언한 `FilteResponse` 클래스 생성.
-2. 발생한 오류 메시지와 성공 메시지를 해당 클래스를 통해 `ByteStream`으로 변환한 뒤, `DataStream`으로 감싸고, `Mono`로 한번 더 감싸서 반환.
-3. 반환된 Mono를 게이트웨이 필터를 통해 리턴하는 것으로 동일한 컨벤션을 지키는 오류 메시지, 성공 메시지를 그대로 출력 가능.
-
-### 두 스프링 필터에서 리턴방식에 차이가 발생한 이유
-
-- 스프링 MVC는 블로킹 방식의 구조를 가지고 있어 단 한 개의 스레드에서 오류가 발생하면 다른 작업이 진행되는 일 없이 바로 리턴되지만, 스프링 클라우드 API 게이트웨이는 논블로킹 방식의 `WebFlux`를 사용하고 있어서 오류가 발생해도 다른 필터의 검증 작업은 그대로 진행되기 때문에, 모든 필터가 검증이 끝난 뒤에 오류를 리턴하는 pub, sub 구조를 채택하고 있기 때문에 `Mono` 와 `DataStream`을 사용해 논블로킹 방식을 유지하며, 오류를 리턴하는 방식을 사용한다.
-
-### 결론
-
-- 발생한 오류가 어느 위치에서 발생하는지, 사용하는 프레임워크가 어떤 처리방식을 채택했는지에 따라, 메시지 컨벤션 방법이 크게 달라질 수 있다.
-- 그러므로, 어느 위치에서 리턴되는지 파악하는 것은 매우 중요하다.
-
-<br>
-
-## 6. Kafka 트러블슈팅: Exactly-Once에서 At-Least-Once로 변경하여 데이터 정합성 문제 해결
-
-### 1. 문제 상황
-
-Kafka에서 **Exactly-Once(EO) 처리**를 사용하던 중 성능 문제 또는 운영 복잡성 증가로 인해 **At-Least-Once(ALO)**로 변경해야 하는 상황이 발생했습니다. 하지만 변경 후 중복 메시지 발생 또는 데이터 유실 문제가 발생하여 데이터 정합성이 깨질 가능성이 있습니다.
-
-### 2. 문제 원인
-
-**Exactly-Once에서 At-Least-Once로 변경할 경우 발생하는 주요 문제점**
-
-- **중복 메시지 발생**: ALO는 최소 한 번 메시지가 전송되므로 중복 메시지가 발생할 가능성이 높음
-- **자동 Offset Commit 사용 시 데이터 유실 가능성**: 메시지가 정상적으로 처리되지 않았음에도 Offset이 커밋될 수 있음
-- **Idempotence 비활성화로 인한 중복 전송 문제**
-
-### 3. 해결 방법
-
-### 3.1 멱등한 메시지 처리 로직 구현
-
-ALO에서는 메시지가 중복 수신될 수 있기 때문에, **멱등성을 보장하는 방식**으로 로직을 구성해야 한다.
-
-- 동일한 입력 값으로 로직을 여러 번 실행해도 결과가 달라지지 않도록 구현
-- 예: 한 번 취소한 주문을 다시 취소하는 것은 동일한 상태를 유지하므로 멱등성을 만족함
-- **그러나 모든 비즈니스 로직에서 멱등성을 보장하기는 어려우므로, 추가적인 중복 방지 처리가 필요**
-
-#### 3.2 중복 메시지 필터링 로직 구현
-
-중복 메시지를 방지하기 위해 **비즈니스 로직 실행과 메시지 기록을 하나의 트랜잭션으로 묶는 방식**을 사용할 수 있다.
-
-##### **중복 메시지 필터링을 위한 redis 활용**
-
-1) Redis의 SET을 활용하여 메시지 ID저장
-2) 메시지 처리 시, 해당 메시지 ID존재 여부 확인
-3) 새로운 메시지만 처리
-4) TTL을 설정하여 일정 시간이 지나면 자동 삭
-
-```sql
-CREATE TABLE PROCESSED_MESSAGE (
-    message_id VARCHAR(255) PRIMARY KEY,
-    processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-##### **중복 방지 로직 적용한 Consumer 예제**
-
-```java
-KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-consumer.subscribe(Arrays.asList("my-topic"));
-
-Jedis redisClient = new Jedis("localhost", 6379);
-
-while (true) {
-    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-  
-    for (ConsumerRecord<String, String> record : records) {
-        String messageId = record.key();
-    
-        if (isMessageProcessed(redisClient, messageId)) {
-            continue;
-        }
-    
-        process(record);
-        markMessageAsProcessed(redisClient, messageId);
-    }
-  
-    consumer.commitAsync((offsets, exception) -> {
-        if (exception != null) {
-            consumer.commitSync();
-        }
-    });
-}
-redisClient.close();
-```
-
-##### **중복 메시지 확인 및 기록 함수**
-
-```java
-private boolean isMessageProcessed(Jedis redisClient, String messageId) {
-    return redisClient.sismember("processed_messages", messageId);
-}
-
-private void markMessageAsProcessed(Jedis redisClient, String messageId) {
-    redisClient.sadd("processed_messages", messageId);
-    redisClient.expire("processed_messages", 86400);
-}
-```
-
-<br>
-
-# 📈 **추가 개선 가능 점**
-
-## 1.  **엘라스틱 서치 개발의 개선**
-
-- 샤드 수가 너무 많으면 오버헤드가 증가하고, 너무 적으면 데이터 검색 속도가 저하된다. 이를 유념하여 조정이 필요하다.
-- 데이터의 사용 빈도에 따라 핫(Hot), 웜(Warm), 콜드(Cold) 노드를 구성하여 리소스를 효율적으로 사용해야한다.
-- 여러 클러스터로 나누어 데이터를 검색하거나 복자하여 대규모 환경에서도 안정적인 성능을 유지할 수 있도록 개발해야한다.
-- 백업을 위한 스냅샷을 정기적으로 생성하도록 설정해야한다.
-
-<br>
