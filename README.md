@@ -63,148 +63,23 @@
 
 ## 📚 **기술 스택**
 
-### Frontend
+### Front-End
+[![My Skills](https://skillicons.dev/icons?i=js,html,css)](https://skillicons.dev)
 
-<table>
-  <tr>
-    <td width="80px" height="60px">
-      <a href="https://www.tcpschool.com/html/html5_intro_intro" target="_blank"><img style="margin: 10px" width="60px" src="https://profilinator.rishav.dev/skills-assets/html5-original-wordmark.svg" alt="React"  /></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://www.w3schools.com/css/" target="_blank"><img style="margin: 10px" width="60px" src="https://profilinator.rishav.dev/skills-assets/css3-original-wordmark.svg" alt="CSS3"/></a>
-    </td>
-
-<table>
-  <tr>
-    <td width="80px" height="60px">
-      <a href="https://redis.io/" target="_blank"><img style="margin: 10px" width="60px" src="https://profilinator.rishav.dev/skills-assets/redis-original-wordmark.svg" alt="Redis"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://https://spring.io/projects/spring-security" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/spring-security.png" alt="Spring security"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://stomp-js.github.io/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/stomp.png" alt="stomp"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://stomp-js.github.io/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/websocket.png" alt="websocket"/></a>
-    </td>
-   <td width="80px" height="60px">
-      <a href="https://gradle.org/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/gradle.png" alt="gradle"/></a>
-    </td>
-  </tr>
-  <tr align='center'>
-    <td>Redis</td>
-    <td>Spring<br/>security</td>
-    <td>Stomp</td>
-    <td>Websocket</td>
-    <td>Gradle</td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td width="80px" height="60px">
-      <a href="https://logback.qos.ch/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/logback.png" alt="Logback"/></a>
-    </td>
-   <td width="80px" height="60px">
-      <a href="https://www.slf4j.org/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/slf4j.png" alt="Slf4j"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://oauth.net/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/Oauth.png" alt="OAuth"/></a>
-    </td>
-   <td width="80px" height="60px">
-      <a href="http://www.jasypt.org/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/jwt.png" alt="jwt"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://www.rabbitmq.com/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/rabbitmq.png" alt="jwt"/></a>
-    </td>
-  </tr>
-  <tr align='center'>
-    <td>Logback</td>
-    <td>Slf4j</td>
-    <td>OAuth 2.0</td>
-    <td>Jwt</td>
-    <td>RabbitMQ</td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td width="80px" height="60px">
-      <a href="https://www.elastic.co/kr/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/elasticsearch.png" alt="elasticsearch"/></a>
-    </td>
-   <td width="80px" height="60px">
-      <a href="https://www.elastic.co/kr/kibana" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/kibana.png" alt="kibana"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://www.elastic.co/kr/logstash" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/logstash.png" alt="logstash"/></a>
-    </td>
-  </tr>
-  <tr align='center'>
-    <td>elasticsearch</td>
-    <td>kibana</td>
-    <td>logstash</td>
-  </tr>
-</table>
-
-<br/>
+### Back-End
+[![My Skills](https://skillicons.dev/icons?i=java,spring,redis,gradle,elasticsearch,rabbitmq)](https://skillicons.dev)
 
 ### DevOps
-
-<table>
-  <tr>
-    <td width="80px" height="60px">
-      <a href="https://aws.amazon.com/" target="_blank"><img style="margin: 10px" width="60px" src="https://profilinator.rishav.dev/skills-assets/amazonwebservices-original-wordmark.svg" alt="AWS"/></a> 
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://www.docker.com/" target="_blank"><img style="margin: 10px" width="60px" src="https://profilinator.rishav.dev/skills-assets/docker-original-wordmark.svg" alt="Docker"/></a> 
-    </td>
-  </tr>
-  <tr align='center'>
-    <td>AWS</td>
-    <td>Docker</td>
-  </tr>
-</table>
-
-<br/>
+[![My Skills](https://skillicons.dev/icons?i=aws,docker)](https://skillicons.dev)
 
 ### Tools
+[![My Skills](https://skillicons.dev/icons?i=notion,github)](https://skillicons.dev)
 
-<table>
-  <tr>
-    <td width="80px" height="60px">
-      <a href="https://www.notion.so/" target="_blank"><img style="margin: 10px" width="60px" src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" alt="notion"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://github.com/" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/github.png" alt="Github"/></a>
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://slack.com/intl/ko-kr" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/slack.png" alt="Slack"/></a>  
-    </td>
-    <td width="80px" height="60px">
-      <a href="https://github.com/features/actions" target="_blank"><img style="margin: 10px" width="60px" src="./assets/logo/github_actions.png" alt="GithubActions"/></a>  
-    </td>
-  </tr>
-  <tr align='center'>
-    <td>Notion</td>
-    <td>Github</td>
-    <td>Slack</td>
-    <td>GithubActions</td>
-  </tr>
-</table>
-
-<br/>
-
-<div id="3"></div>
-
-<br>
 
 # 🎯 프로젝트 주요 기능
 
-## 1. JWT 및 스프링 시큐리티 / OAuth 2.0 소셜 로그인
-
 <details>
-<summary></summary>
+<summary>1. JWT 및 스프링 시큐리티 / OAuth 2.0 소셜 로그인</summary>
 
 - JWT 및 Spring Security 설정을 통해 인증 및 인가 로직 구현
 - OAuth 2.0을 사용하여 소셜 로그인 기능 구현
@@ -226,10 +101,9 @@
 
 <br>
 
-## 2. ElasticSearch를 활용한 검색 서비스
 
 <details>
-<summary></summary>
+<summary>2. ElasticSearch를 활용한 검색 서비스</summary>
 
 ElasticSearch는 대용량 데이터를 실시간으로 검색하고 분석할 수 있는 분산형 검색 엔진입니다.
 본 서비스에서는 ElasticSearch를 활용하여 **빠르고 정확한 검색 기능**을 제공합니다.
@@ -251,10 +125,8 @@ ElasticSearch는 대용량 데이터를 실시간으로 검색하고 분석할 �
 
 <br>
 
-## 3. 모니터링 서비스
-
 <details>
-<summary></summary>
+<summary>3. 모니터링 서비스</summary>
 
 서비스의 원활한 운영을 위해 **실시간 모니터링 시스템**을 구축하여 장애 예방 및 성능 개선을 지원합니다.
 
@@ -273,10 +145,8 @@ ElasticSearch는 대용량 데이터를 실시간으로 검색하고 분석할 �
 
 <br>
 
-## 4. 결제 서비스
-
 <details>
-<summary></summary>
+<summary>4. 결제 서비스</summary>
 
 ### 주요기능
 
@@ -296,10 +166,9 @@ ElasticSearch는 대용량 데이터를 실시간으로 검색하고 분석할 �
 
 </details>
 
-## 5. 커뮤니티 서비스
-
+<br>
 <details>
-<summary></summary>
+<summary>5. 커뮤니티 서비스</summary>
 좋아하는 게임에 대한 글을 올리고, 다른 게이머들의 이야기를 볼 수 있는 공간
 
 ### 주요 기능
