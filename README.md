@@ -1,5 +1,3 @@
-## 🎮 Level_UP - 원하는 멘토를 선택하고 실력을 키우는 게임 코칭 플랫폼
-
 <img width="500px" src="assets/levelup-logo.png">
 <br>
 
